@@ -5,7 +5,7 @@ if __name__=='__main__':
     ser= serial.Serial('COM20', baudrate=19600, timeout=20)
 
     def getc(size, timeout=0):
-        ser.read(size)
+        return ser.read(size)
 
 
     def putc(data, timeout=0):
