@@ -257,19 +257,19 @@ class XMODEM(Modem):
         '''
         start_byte = const.SOH if packet_size == 128 else const.STX
         while True:
-            self.putc(start_byte, debug=debug)
-            self.putc(bytes([sequence]), debug=debug)
-            self.putc(bytes([0xff - sequence]), debug=debug)
-            self.putc(data, debug=debug)
+            self.putc(start_byte)
+            self.putc(bytes([sequence]))
+            self.putc(bytes([0xff - sequence]))
+            self.putc(data)
             if crc_mode:
-                self.putc(bytes([crc >> 8]), debug=debug)
-                self.putc(bytes([crc & 0xff]), debug=debug)
+                self.putc(bytes([crc >> 8]))
+                self.putc(bytes([crc & 0xff]))
             else:
                 # Send CRC or checksum
-                self.putc(bytes([crc]), debug=debug)
+                self.putc(bytes([crc]))
 
             # Wait for the <ACK>
-            byte = self.getc(1, timeout, debug=debug)
+            byte = self.getc(1, timeout)
             if byte == const.ACK:
                 # Transmission of the character was successful
                 return True

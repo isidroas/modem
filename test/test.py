@@ -1,6 +1,6 @@
 import threading
 import time
-from io import StringIO
+from io import StringIO, BytesIO
 import queue
 import sys
 from modem.protocol.xmodem import XMODEM
@@ -8,7 +8,7 @@ from modem.protocol.xmodem import XMODEM
 class FakeIO(object):
     streams = [queue.Queue(), queue.Queue()]
     stdin = []
-    stdot = []
+    stdout = []
     delay = 0.01 # simulate modem delays
 
     def putc(self, data, q=0):
@@ -19,17 +19,17 @@ class FakeIO(object):
         return len(data)
 
     def getc(self, size, q=0):
-        data = []
+        data = bytearray()
         while size:
             try:
                 char = self.streams[q].get()
                 print('r%d(0x%x)' % (q, char)),
                 sys.stdout.flush()
-                data.append(chr(char))
+                data.append(char)
                 size -= 1
             except queue.Empty:
                 return None
-        return ''.join(data)
+        return data
 
 class Client(threading.Thread):
     def __init__(self, io, server, filename):
@@ -52,7 +52,7 @@ class Server(FakeIO, threading.Thread):
     def __init__(self, io):
         threading.Thread.__init__(self)
         self.io     = io
-        self.stream = StringIO()
+        self.stream = BytesIO()
 
     def getc(self, data, timeout=0):
         return self.io.getc(data, 1)
