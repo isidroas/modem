@@ -27,4 +27,5 @@ if __name__=='__main__':
     
 
     ymodem = YMODEM(getc, putc)
-    ymodem.send('*.img')
+    #ymodem.send('*.img')
+    ymodem.send('rte_a.img')
