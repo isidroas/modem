@@ -1,14 +1,21 @@
 import serial
 from modem import YMODEM
+from time import sleep
 
 if __name__=='__main__':
     ser= serial.Serial('COM20', baudrate=19600, timeout=20)
 
     def getc(size, timeout=0):
-        read= ser.read(size)
-        print('[main.getc] read=0x'+ read.hex().upper(), flush=True)
+        #read= ser.read(size)
+        #print('[main.getc] read=0x'+ read.hex().upper(), flush=True)
+        #return read
         print('[main.getc] in_waiting='+ str(ser.in_waiting), flush=True)
-        return read
+
+
+        sleep(2)
+        read_all= ser.readall()
+        print('[main.getc] read_all=0x'+ read_all.hex().upper(), flush=True)
+        return read_all[-size:]
 
 
     def putc(data, timeout=0):
