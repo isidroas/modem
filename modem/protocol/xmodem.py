@@ -278,7 +278,7 @@ class XMODEM(Modem):
                 error_count += 1
                 if error_count >= retry:
                     # Excessive amounts of retransmissions requested
-                    self.error(error.ABORT_ERROR_LIMIT)
+                    log.error(error.ABORT_ERROR_LIMIT)
                     self.abort(timeout=timeout)
                     return False
                 continue
