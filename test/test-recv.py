@@ -5,7 +5,7 @@ import select
 import shutil
 import subprocess
 import sys
-import StringIO
+from io import StringIO
 import tempfile
 from modem import *
 
@@ -16,14 +16,14 @@ def run(modem='xmodem'):
                      stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         si, so = (pipe.stdin, pipe.stdout)
 
-        stream = StringIO.StringIO()
+        stream = StringIO()
 
     elif modem.lower() == 'ymodem':
         pipe   = subprocess.Popen(['sz', '--ymodem', '--quiet', __file__],
                      stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         si, so = (pipe.stdin, pipe.stdout)
 
-        stream = StringIO.StringIO()
+        stream = StringIO()
 
     elif modem.lower() == 'zmodem':
         if len(sys.argv) > 2:
@@ -35,7 +35,7 @@ def run(modem='xmodem'):
                      stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         si, so = (pipe.stdin, pipe.stdout)
 
-        stream = StringIO.StringIO()
+        stream = StringIO()
 
     def getc(size, timeout=3):
         w,t,f = select.select([so], [], [], timeout)
