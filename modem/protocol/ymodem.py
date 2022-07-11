@@ -196,7 +196,7 @@ class YMODEM(XMODEM):
                         data = self.getc(packet_size + 1 + crc_mode)
                         data = self._check_crc(data, crc_mode)
                         if data:
-                            filename = data.split('\x00')[0]
+                            filename = data.split(b'\x00')[0]
                             if not filename:
                                 # No filename, end of batch reception
                                 self.putc(const.ACK)
@@ -205,7 +205,7 @@ class YMODEM(XMODEM):
                             log.info('Receiving %s to %s' %
                                      (filename, basedir))
                             fileout = open(os.path.join(
-                                basedir, os.path.basename(filename)), 'wb')
+                                basedir, os.path.basename(filename.decode())), 'wb')
 
                             if not fileout:
                                 log.error(error.ABORT_OPEN_FILE)

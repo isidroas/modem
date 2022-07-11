@@ -4,18 +4,16 @@ from io import StringIO, BytesIO
 import queue
 import sys
 from modem.protocol.xmodem import XMODEM
+from modem.protocol.ymodem import YMODEM
 
 class FakeIO(object):
-    streams = [queue.Queue(), queue.Queue()]
-    stdin = []
-    stdout = []
-    delay = 0.01 # simulate modem delays
+    def __init__(self):
+        self.streams = [queue.Queue(), queue.Queue()]
 
     def putc(self, data, q=0):
         for char in data:
             self.streams[1-q].put(char)
             print('p%d(0x%x)' % (q, char)),
-            sys.stdout.flush()
         return len(data)
 
     def getc(self, size, q=0):
@@ -24,7 +22,6 @@ class FakeIO(object):
             try:
                 char = self.streams[q].get()
                 print('r%d(0x%x)' % (q, char)),
-                sys.stdout.flush()
                 data.append(char)
                 size -= 1
             except queue.Empty:
@@ -32,10 +29,10 @@ class FakeIO(object):
         return data
 
 class Client(threading.Thread):
-    def __init__(self, io, server, filename):
+    def __init__(self, io, filename):
         threading.Thread.__init__(self)
         self.io     = io
-        self.server = server
+        self.filename=filename
         self.stream = open(filename, 'rb')
 
     def getc(self, data, timeout=0):
@@ -45,10 +42,10 @@ class Client(threading.Thread):
         return self.io.putc(data, 0)
 
     def run(self):
-        self.xmodem = XMODEM(self.getc, self.putc)
-        print('c.send', self.xmodem.send(self.stream))
+        self.xmodem = YMODEM(self.getc, self.putc)
+        print('c.send', self.xmodem.send(self.filename))
 
-class Server(FakeIO, threading.Thread):
+class Server(threading.Thread):
     def __init__(self, io):
         threading.Thread.__init__(self)
         self.io     = io
@@ -61,15 +58,15 @@ class Server(FakeIO, threading.Thread):
         return self.io.putc(data, 1)
 
     def run(self):
-        self.xmodem = XMODEM(self.getc, self.putc)
-        print('s.recv', self.xmodem.recv(self.stream))
+        self.xmodem = YMODEM(self.getc, self.putc)
+        print('s.recv', self.xmodem.recv('./ymodem_recv'))
         print('got')
         print(self.stream.getvalue())
 
 if __name__ == '__main__':
     i = FakeIO()
     s = Server(i)
-    c = Client(i, s, sys.argv[1])
+    c = Client(i, sys.argv[1])
     s.start()
     c.start()
 
