@@ -13,7 +13,7 @@ if __name__=='__main__':
 
 
         sleep(2)
-        read_all= ser.readall()
+        read_all= ser.read_all()
         print('[main.getc] read_all=0x'+ read_all.hex().upper(), flush=True)
         return read_all[-size:]
 
