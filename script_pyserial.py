@@ -7,6 +7,7 @@ if __name__=='__main__':
     def getc(size, timeout=0):
         read= ser.read(size)
         print('[main.getc] read=0x'+ read.hex().upper(), flush=True)
+        print('[main.getc] in_waiting='+ str(ser.in_waiting), flush=True)
         return read
 
 
