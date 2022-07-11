@@ -2,7 +2,7 @@ import serial
 from modem import YMODEM
 
 if __name__=='__main__':
-    ser= serial.Serial('COM20', baudrate=19600)
+    ser= serial.Serial('COM20', baudrate=19600, timeout=20)
 
     def getc(size, timeout=0):
         ser.read(size)
@@ -11,6 +11,7 @@ if __name__=='__main__':
     def putc(data, timeout=0):
         ser.write(data)
         ser.flushOutput()
+        return len(data)
     
 
     ymodem = YMODEM(getc, putc)
