@@ -7,6 +7,7 @@ if __name__=='__main__':
     def getc(size, timeout=0):
         read= ser.read(size)
         print('[main.getc] read=0x'+ read.hex().upper())
+        return read
 
 
     def putc(data, timeout=0):
