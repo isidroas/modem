@@ -6,14 +6,14 @@ if __name__=='__main__':
 
     def getc(size, timeout=0):
         read= ser.read(size)
-        print('[main.getc] read=0x'+ read.hex().upper())
+        print('[main.getc] read=0x'+ read.hex().upper(), flush=True)
         return read
 
 
     def putc(data, timeout=0):
         ser.write(data)
         ser.flushOutput()
-        print('[main.putc] write=0x'+ data.hex().upper())
+        print('[main.putc] write=0x'+ data.hex().upper(), flush=True)
         return len(data)
     
 
