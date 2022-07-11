@@ -2,7 +2,7 @@ import serial
 from modem import YMODEM
 
 if __name__=='__main__':
-    ser= serial.Serial('/dev/pts/8')
+    ser= serial.Serial('COM20', baudrate=19600)
 
     def getc(size, timeout=0):
         ser.read(size)
@@ -14,4 +14,4 @@ if __name__=='__main__':
     
 
     ymodem = YMODEM(getc, putc)
-    ymodem.send('/etc/issue')
+    ymodem.send('*.img')
